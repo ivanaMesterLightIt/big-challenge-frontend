@@ -7,7 +7,7 @@ import classnames from 'classnames'
 interface SelectProps {
   options: { id: number; name: string }[]
   defaultSelected?: { id: number; name: string }
-  onselect: (value: { id: number; name: string }) => void
+  onSelect: (value: { id: number; name: string }) => void
 }
 
 export const tw: typeof classnames = (...params) =>
@@ -16,13 +16,13 @@ export const tw: typeof classnames = (...params) =>
 export const Select: FC<SelectProps> = ({
   options,
   defaultSelected,
-  onselect,
+  onSelect,
 }) => {
   const [selected, setSelected] = useState(defaultSelected || options[0])
 
   const handleSelected = (value: { id: number; name: string }) => {
     setSelected(value)
-    onselect(selected)
+    onSelect(selected)
   }
 
   return (
