@@ -1,5 +1,5 @@
 import {
-  createColumnHelper,
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -8,63 +8,13 @@ import { useReducer, useState } from 'react'
 import { tw } from '../../utils/tw'
 import { Pill } from './Pill'
 
-type PatientSubmission = {
-  submissionTitle: string
-  doctorAssigned: string
-  createdAt: string
-  status: 'pending' | 'in progress' | 'done'
+export interface BaseTableProps<TData extends object> {
+  tableData: TData[];
+  columns: ColumnDef<TData, any>[];
 }
 
-const submissionData: PatientSubmission[] = [
-  {
-    submissionTitle: 'submission 1',
-    doctorAssigned: 'Doctor 1',
-    createdAt: '30/01/2020',
-    status: 'pending',
-  },
-  {
-    submissionTitle: 'submission 2',
-    doctorAssigned: 'Doctor 2',
-    createdAt: '26/03/2020',
-    status: 'done',
-  },
-  {
-    submissionTitle: 'submission 3',
-    doctorAssigned: 'Doctor 3',
-    createdAt: '26/03/2020',
-    status: 'in progress',
-  },
-  {
-    submissionTitle: 'submission 4',
-    doctorAssigned: 'Doctor 4',
-    createdAt: '26/03/2020',
-    status: 'done',
-  },
-]
-
-const columnHelper = createColumnHelper<PatientSubmission>()
-
-const columns = [
-  columnHelper.accessor('submissionTitle', {
-    header: () => <span>SUBMISSION TITLE</span>,
-    id: 'submissionTitle',
-  }),
-  columnHelper.accessor('doctorAssigned', {
-    header: () => <span>DOCTOR ASSIGNED</span>,
-    id: 'doctorAssigned',
-  }),
-  columnHelper.accessor('createdAt', {
-    header: () => <span>CREATED AT</span>,
-    id: 'createdAt',
-  }),
-  columnHelper.accessor('status', {
-    header: () => <span>STATUS</span>,
-    id: 'status',
-  }),
-]
-
-export const BaseTable = () => {
-  const [data, setData] = useState(() => [...submissionData])
+export const BaseTable = <TData extends object>({ columns, tableData }: BaseTableProps<TData>) => {
+  const [data, setData] = useState(() => [...tableData])
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useReactTable({
