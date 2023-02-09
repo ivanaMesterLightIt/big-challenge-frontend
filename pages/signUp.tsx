@@ -7,20 +7,35 @@ import { registerUser, NewUser } from '../api/user/register'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
-import { z } from "Zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from 'Zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const registerSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required' }),
-  email: z.string().min(1, { message: 'Email is required' }).email({message: 'Invalid email'}),
-  password: z.string().min(1, { message: 'Password is required' }).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'Invalid password'}),
-  repeatPassword: z.string().min(1, { message: 'Password is required' }).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'Invalid password'})
-}).refine((data) => data.password === data.repeatPassword, {
-  path: ["repeatPassword"],
-  message: "Password don't match",
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(1, { message: 'Name is required' }),
+    email: z
+      .string()
+      .min(1, { message: 'Email is required' })
+      .email({ message: 'Invalid email' }),
+    password: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+        message: 'Invalid password',
+      }),
+    repeatPassword: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+        message: 'Invalid password',
+      }),
+  })
+  .refine(data => data.password === data.repeatPassword, {
+    path: ['repeatPassword'],
+    message: "Password don't match",
+  })
 
-export type FormValues = z.infer<typeof registerSchema>;
+export type FormValues = z.infer<typeof registerSchema>
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -28,7 +43,7 @@ export default function SignUpPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<FormValues>({ resolver: zodResolver(registerSchema)})
+  } = useForm<FormValues>({ resolver: zodResolver(registerSchema) })
 
   const [typeDoctor, setTypeDoctor] = useState(true)
 
@@ -133,7 +148,11 @@ export default function SignUpPage() {
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
           <span className="text-gray-500 mr-1">Already have an account?</span>
-          <span onClick={() => { router.push('/login') }}  className="text-blue-600 hover:underline cursor-pointer">
+          <span
+            onClick={() => {
+              router.push('/login')
+            }}
+            className="text-blue-600 hover:underline cursor-pointer">
             Log in
           </span>
         </div>
