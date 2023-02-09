@@ -9,15 +9,12 @@ import { loginUser } from '../api/user/login'
 import { z } from "Zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export interface IFormInput {
-  email: string
-  password: string
-}
-
 const loginSchema = z.object({
   email: z.string().min(1, { message: 'Email is required' }).email({message: 'Invalid email'}),
   password: z.string().min(1, { message: 'Password is required' }).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'Invalid password'})
 });
+
+export type FormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter()
@@ -25,7 +22,7 @@ export default function LoginPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<IFormInput>({ resolver: zodResolver(loginSchema) })
+  } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
 
   const { mutate } = useMutation({
     mutationFn: loginUser,
@@ -34,7 +31,7 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  const onSubmit: SubmitHandler<FormValues> = data => {
     mutate(data)
   }
 

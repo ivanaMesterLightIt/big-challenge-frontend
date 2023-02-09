@@ -10,14 +10,6 @@ import { useMutation } from '@tanstack/react-query'
 import { z } from "Zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export interface IFormInput {
-  name: string
-  email: string
-  password: string
-  repeatPassword: string
-  userType: 'PATIENT' | 'DOCTOR'
-}
-
 const registerSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   email: z.string().min(1, { message: 'Email is required' }).email({message: 'Invalid email'}),
@@ -26,7 +18,9 @@ const registerSchema = z.object({
 }).refine((data) => data.password === data.repeatPassword, {
   path: ["repeatPassword"],
   message: "Password don't match",
-});;
+});
+
+export type FormValues = z.infer<typeof registerSchema>;
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -34,11 +28,11 @@ export default function SignUpPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<IFormInput>({ resolver: zodResolver(registerSchema)})
+  } = useForm<FormValues>({ resolver: zodResolver(registerSchema)})
 
   const [typeDoctor, setTypeDoctor] = useState(true)
 
-  const getRegisterData = (data: IFormInput) => {
+  const getRegisterData = (data: FormValues) => {
     const newUserData: NewUser = {
       name: data.name,
       email: data.email,
@@ -55,7 +49,7 @@ export default function SignUpPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  const onSubmit: SubmitHandler<FormValues> = data => {
     mutate(getRegisterData(data))
   }
 
