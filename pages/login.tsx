@@ -6,11 +6,18 @@ import { BaseInput } from '../components/shared/BaseInput'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import { loginUser } from '../api/user/login'
+import { z } from "Zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export interface IFormInput {
   email: string
   password: string
 }
+
+const loginSchema = z.object({
+  email: z.string().min(1, { message: 'Email is required' }).email({message: 'Invalid email'}),
+  password: z.string().min(1, { message: 'Password is required' }).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'Invalid password'})
+});
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,11 +25,7 @@ export default function LoginPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<IFormInput>()
-
-  const mailPattern =
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+  } = useForm<IFormInput>({ resolver: zodResolver(loginSchema) })
 
   const { mutate } = useMutation({
     mutationFn: loginUser,
@@ -52,13 +55,7 @@ export default function LoginPage() {
               label="Email"
               error={errors.email}
               errorMessage={errors.email?.message}
-              {...register('email', {
-                required: { value: true, message: 'Email is required' },
-                pattern: {
-                  value: mailPattern,
-                  message: 'Invalid email address',
-                },
-              })}
+              {...register('email')}
             />
           </div>
           <div className="w-full my-4 flex flex-row items-center justify-between">
@@ -67,13 +64,7 @@ export default function LoginPage() {
               type="password"
               error={errors.password}
               errorMessage={errors.password?.message}
-              {...register('password', {
-                required: { value: true, message: 'Password is required' },
-                pattern: {
-                  value: passwordPattern,
-                  message: 'Invalid password',
-                },
-              })}
+              {...register('password')}
             />
           </div>
           <div className="mt-6 w-full px-3">
