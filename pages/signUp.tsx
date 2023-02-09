@@ -148,13 +148,13 @@ export default function SignUpPage() {
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
           <span className="text-gray-500 mr-1">Already have an account?</span>
-          <span
+          <a
             onClick={() => {
               router.push('/login')
             }}
             className="text-blue-600 hover:underline cursor-pointer">
             Log in
-          </span>
+          </a>
         </div>
       </div>
     </div>

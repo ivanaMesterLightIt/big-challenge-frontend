@@ -76,13 +76,13 @@ export default function LoginPage() {
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
           <span className="text-gray-500 mr-1">Don't have an account yet?</span>
-          <span
+          <a
             onClick={() => {
               router.push('/signUp')
             }}
             className="text-blue-600 hover:underline cursor-pointer">
             Sign up
-          </span>
+          </a>
         </div>
       </div>
     </div>
