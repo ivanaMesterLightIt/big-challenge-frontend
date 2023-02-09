@@ -7,14 +7,35 @@ import { registerUser, NewUser } from '../api/user/register'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
+import { z } from 'Zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-export interface IFormInput {
-  name: string
-  email: string
-  password: string
-  repeatPassword: string
-  userType: 'PATIENT' | 'DOCTOR'
-}
+const registerSchema = z
+  .object({
+    name: z.string().min(1, { message: 'Name is required' }),
+    email: z
+      .string()
+      .min(1, { message: 'Email is required' })
+      .email({ message: 'Invalid email' }),
+    password: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+        message: 'Invalid password',
+      }),
+    repeatPassword: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+        message: 'Invalid password',
+      }),
+  })
+  .refine(data => data.password === data.repeatPassword, {
+    path: ['repeatPassword'],
+    message: "Password don't match",
+  })
+
+export type FormValues = z.infer<typeof registerSchema>
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -22,15 +43,11 @@ export default function SignUpPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<IFormInput>()
+  } = useForm<FormValues>({ resolver: zodResolver(registerSchema) })
 
   const [typeDoctor, setTypeDoctor] = useState(true)
 
-  const mailPattern =
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-
-  const getRegisterData = (data: IFormInput) => {
+  const getRegisterData = (data: FormValues) => {
     const newUserData: NewUser = {
       name: data.name,
       email: data.email,
@@ -47,7 +64,7 @@ export default function SignUpPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  const onSubmit: SubmitHandler<FormValues> = data => {
     mutate(getRegisterData(data))
   }
 
@@ -68,21 +85,13 @@ export default function SignUpPage() {
               label="Name"
               error={errors.name}
               errorMessage={errors.name?.message}
-              {...register('name', {
-                required: { value: true, message: 'Name is required' },
-              })}
+              {...register('name')}
             />
             <BaseInput
               label="Email"
               error={errors.email}
               errorMessage={errors.email?.message}
-              {...register('email', {
-                required: { value: true, message: 'Email is required' },
-                pattern: {
-                  value: mailPattern,
-                  message: 'Invalid email address',
-                },
-              })}
+              {...register('email')}
             />
           </div>
           <div className="w-full my-4 flex flex-row items-center justify-between">
@@ -91,28 +100,14 @@ export default function SignUpPage() {
               type="password"
               error={errors.password}
               errorMessage={errors.password?.message}
-              {...register('password', {
-                required: { value: true, message: 'Password is required' },
-                pattern: {
-                  value: passwordPattern,
-                  message: 'Invalid password',
-                },
-              })}
+              {...register('password')}
             />
             <BaseInput
               label="Repeat Password"
               type="password"
               error={errors.repeatPassword}
               errorMessage={errors.repeatPassword?.message}
-              {...register('repeatPassword', {
-                required: { value: true, message: 'Password is required' },
-                pattern: {
-                  value: passwordPattern,
-                  message: 'Invalid password',
-                },
-                validate: (value, formValues) =>
-                  value === formValues.password || 'Does not match password',
-              })}
+              {...register('repeatPassword')}
             />
           </div>
           <label className="px-3 pb-1 block text-sm font-medium text-gray-700">
@@ -153,9 +148,13 @@ export default function SignUpPage() {
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
           <span className="text-gray-500 mr-1">Already have an account?</span>
-          <span className="text-blue-600 hover:underline cursor-pointer">
+          <a
+            onClick={() => {
+              router.push('/login')
+            }}
+            className="text-blue-600 hover:underline cursor-pointer">
             Log in
-          </span>
+          </a>
         </div>
       </div>
     </div>
