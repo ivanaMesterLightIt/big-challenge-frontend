@@ -1,19 +1,20 @@
-import { FC, PropsWithChildren, useState } from 'react'
+import { FC, PropsWithChildren, useEffect, useState } from 'react'
 import { tw } from '../../utils/tw'
 import {
   HomeIcon,
   InboxIcon,
   PlusCircleIcon,
 } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/router'
 
 const patientNavigation = [
   { name: 'Home', href: '/patientHome', icon: HomeIcon },
-  { name: 'New submission', href: '#', icon: PlusCircleIcon },
+  { name: 'New submission', href: '/newSubmission', icon: PlusCircleIcon },
 ]
 
 const doctorNavigation = [
   { name: 'Home', href: '/doctorHome', icon: HomeIcon },
-  { name: 'Task history', href: '#', icon: InboxIcon },
+  { name: 'Task history', href: '/taskHistory', icon: InboxIcon },
 ]
 
 export interface MainLayoutProps {
@@ -24,12 +25,13 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   children,
   userType,
 }) => {
+  const router = useRouter()
   const [selected, setSelected] = useState('Home')
   const navigation =
     userType === 'DOCTOR' ? doctorNavigation : patientNavigation
 
   const userName = 'Tom Cook'
-
+  
   return (
     <>
       <div>
@@ -43,14 +45,14 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                     href={item.href}
                     onClick={() => setSelected(item.name)}
                     className={tw(
-                      item.name === selected
+                      item.href === router.asPath
                         ? 'bg-gray-900 text-white'
                         : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                       'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
                     )}>
                     <item.icon
                       className={tw(
-                        item.name === selected
+                        item.href === router.asPath
                           ? 'text-gray-300'
                           : 'text-gray-400 group-hover:text-gray-300',
                         'mr-3 flex-shrink-0 h-6 w-6',
