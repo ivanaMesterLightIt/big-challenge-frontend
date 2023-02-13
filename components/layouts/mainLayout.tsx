@@ -67,7 +67,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                 <div className="flex items-center">
                   <div className="relative rounded-full h-8 w-8 bg-gray-400">
                     <span className="text-white text-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      T
+                      { userName.slice(0,1) }
                     </span>
                   </div>
                   <div className="ml-3">
