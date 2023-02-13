@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useState } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import { tw } from '../../utils/tw'
 import {
   HomeIcon,
@@ -26,7 +26,6 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   userType,
 }) => {
   const router = useRouter()
-  const [selected, setSelected] = useState('Home')
   const navigation =
     userType === 'DOCTOR' ? doctorNavigation : patientNavigation
 
@@ -43,7 +42,6 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                   <a
                     key={item.name}
                     href={item.href}
-                    onClick={() => setSelected(item.name)}
                     className={tw(
                       item.href === router.asPath
                         ? 'bg-gray-900 text-white'
