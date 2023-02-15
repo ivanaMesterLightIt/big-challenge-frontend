@@ -16,11 +16,11 @@ export type LoginUser = {
 const baseURL = 'http://localhost/api'
 
 export const registerUser = async (user: NewUser) => {
-  const response = await axios.post(`${baseURL}/register`, user, {headers})
+  const response = await axios.post(`${baseURL}/register`, user, { headers })
   return response.data
 }
 
 export const loginUser = async (user: LoginUser) => {
-  const response = await axios.post(`${baseURL}/login`, user, {headers})
+  const response = await axios.post(`${baseURL}/login`, user, { headers })
   return response.data
 }
