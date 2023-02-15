@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { BaseButton } from '../components/shared/BaseButton'
 import { BaseInput } from '../components/shared/BaseInput'
-import { registerUser, NewUser } from '../api/user/register'
+import { NewUser, registerUser } from '../api/user'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
@@ -52,7 +52,7 @@ export default function SignUpPage() {
       name: data.name,
       email: data.email,
       password: data.password,
-      user_type: typeDoctor ? 'DOCTOR' : 'PATIENT',
+      type: typeDoctor ? 'doctor' : 'patient',
     }
     return newUserData
   }
@@ -116,7 +116,7 @@ export default function SignUpPage() {
           <div className="flex flex-row items-center justify-between px-3">
             <div className="flex items-center w-full border border-gray-300 rounded-l p-3">
               <input
-                id="DOCTOR"
+                id="doctor"
                 name="userType"
                 type="radio"
                 defaultChecked={true}
@@ -130,7 +130,7 @@ export default function SignUpPage() {
             </div>
             <div className="flex items-center w-full border border-gray-300 rounded-r p-3">
               <input
-                id="PATIENT"
+                id="patient"
                 name="userType"
                 type="radio"
                 checked={!typeDoctor}

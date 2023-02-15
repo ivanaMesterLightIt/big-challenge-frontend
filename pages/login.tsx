@@ -5,7 +5,7 @@ import { BaseButton } from '../components/shared/BaseButton'
 import { BaseInput } from '../components/shared/BaseInput'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
-import { loginUser } from '../api/user/login'
+import { loginUser } from '../api/user'
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
