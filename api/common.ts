@@ -1,5 +1,5 @@
 export const baseURL = 'http://localhost/api'
 
 export const headers = {
-    'Content-Type': 'application/json',
-  }
+  'Content-Type': 'application/json',
+}

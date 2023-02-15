@@ -13,10 +13,8 @@ export type LoginUser = {
   password: string
 }
 
-export const registerUser = (user: NewUser) => (
- axios.post(`${baseURL}/register`, user, { headers }).then(({ data }) => data)
-)
+export const registerUser = (user: NewUser) =>
+  axios.post(`${baseURL}/register`, user, { headers }).then(({ data }) => data)
 
-export const loginUser = (user: LoginUser) => (
- axios.post(`${baseURL}/login`, user, { headers }).then(({ data }) => data)
-)
+export const loginUser = (user: LoginUser) =>
+  axios.post(`${baseURL}/login`, user, { headers }).then(({ data }) => data)
