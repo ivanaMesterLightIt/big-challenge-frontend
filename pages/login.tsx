@@ -34,7 +34,8 @@ export default function LoginPage() {
 
   const { mutate } = useMutation({
     mutationFn: loginUser,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token)
       router.push('/patientHome')
     },
   })
