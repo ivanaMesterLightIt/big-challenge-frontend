@@ -45,7 +45,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   })
 
   const onLogoutClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    e.stopPropagation();
     mutate()
   }
   
