@@ -43,11 +43,6 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
       console.log('error' ,error)
     }
   })
-
-  const onLogoutClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    mutate()
-  }
   
   return (
     <>
@@ -92,7 +87,10 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                     <p className="text-sm text-white">{ userName }</p>
                     <button 
                     className="text-xs text-gray-300 group-hover:underline"
-                    onClick={onLogoutClick}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mutate()
+                    }}
                     >
                       Sign out
                     </button>
