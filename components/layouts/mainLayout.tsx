@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
-import { logoutUser } from '../../pages/api/user'
+import { logoutUser } from '../../api/user'
 
 const patientNavigation = [
   { name: 'Home', href: '/patientHome', icon: HomeIcon },
