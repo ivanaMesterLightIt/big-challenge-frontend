@@ -6,6 +6,8 @@ import {
   PlusCircleIcon,
 } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
+import { useMutation } from '@tanstack/react-query'
+import { logoutUser } from '../../api/user'
 
 const patientNavigation = [
   { name: 'Home', href: '/patientHome', icon: HomeIcon },
@@ -30,6 +32,17 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
     userType === 'DOCTOR' ? doctorNavigation : patientNavigation
 
   const userName = 'Tom Cook'
+
+  const { mutate } = useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      localStorage.removeItem('token')
+      router.push('/login')
+    },
+    onError: (error) => {
+      console.log('error' ,error)
+    }
+  })
   
   return (
     <>
@@ -72,9 +85,15 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                   </div>
                   <div className="ml-3">
                     <p className="text-sm text-white">{ userName }</p>
-                    <p className="text-xs text-gray-300 group-hover:underline">
+                    <button 
+                    className="text-xs text-gray-300 group-hover:underline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      mutate()
+                    }}
+                    >
                       Sign out
-                    </p>
+                    </button>
                   </div>
                 </div>
               </a>
