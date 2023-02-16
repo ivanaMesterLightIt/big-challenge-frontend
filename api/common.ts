@@ -4,7 +4,7 @@ export const headers = {
   'Content-Type': 'application/json',
 }
 
-export const getHeaders = () => {
+export const getAuthedHeaders = () => {
   return (
     {
       'Content-Type': 'application/json',

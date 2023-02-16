@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseURL, getHeaders, headers } from '../common'
+import { baseURL, getAuthedHeaders, headers } from '../common'
 
 export type NewUser = {
   name: string
@@ -20,5 +20,5 @@ export const loginUser = (user: LoginUser) =>
   axios.post(`${baseURL}/login`, user, { headers }).then(({ data }) => data)
   
 export const logoutUser = () =>
-  axios.post(`${baseURL}/logout`, null, { headers: getHeaders() }).then(({ data }) => data)
+  axios.post(`${baseURL}/logout`, null, { headers: getAuthedHeaders() }).then(({ data }) => data)
   
