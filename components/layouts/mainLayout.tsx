@@ -10,13 +10,13 @@ import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../../api/user'
 
 const patientNavigation = [
-  { name: 'Home', href: '/patientHome', icon: HomeIcon },
-  { name: 'New submission', href: '/newSubmission', icon: PlusCircleIcon },
+  { name: 'Home', href: '/patient-home', icon: HomeIcon },
+  { name: 'New submission', href: '/new-submission', icon: PlusCircleIcon },
 ]
 
 const doctorNavigation = [
-  { name: 'Home', href: '/doctorHome', icon: HomeIcon },
-  { name: 'Task history', href: '/taskHistory', icon: InboxIcon },
+  { name: 'Home', href: '/doctor-home', icon: HomeIcon },
+  { name: 'Task history', href: '/task-history', icon: InboxIcon },
 ]
 
 export interface MainLayoutProps {
