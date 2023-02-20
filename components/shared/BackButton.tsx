@@ -11,7 +11,7 @@ export const BackButton: FC<BackButtonProps> = ({ returnTo }) => {
   return (
     <button
       type="button"
-      className="inline-flex items-center rounded-full border border-transparent p-2 hover:bg-gray-100 focus:outline-none focus:ring-offset-2"
+      className="inline-flex items-center"
       onClick={() => {
         router.push(returnTo)
       }}>

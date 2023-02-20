@@ -36,7 +36,7 @@ export default function LoginPage() {
     mutationFn: loginUser,
     onSuccess: data => {
       localStorage.setItem('token', data.token)
-      router.push('/patientHome')
+      router.push('/patient-home')
     },
   })
 

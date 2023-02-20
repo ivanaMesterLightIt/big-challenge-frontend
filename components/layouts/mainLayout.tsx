@@ -10,13 +10,13 @@ import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../../api/user'
 
 const patientNavigation = [
-  { name: 'Home', href: '/patientHome', icon: HomeIcon },
-  { name: 'New submission', href: '/newSubmission', icon: PlusCircleIcon },
+  { name: 'Home', href: '/patient-home', icon: HomeIcon },
+  { name: 'New submission', href: '/new-submission', icon: PlusCircleIcon },
 ]
 
 const doctorNavigation = [
-  { name: 'Home', href: '/doctorHome', icon: HomeIcon },
-  { name: 'Task history', href: '/taskHistory', icon: InboxIcon },
+  { name: 'Home', href: '/doctor-home', icon: HomeIcon },
+  { name: 'Task history', href: '/task-history', icon: InboxIcon },
 ]
 
 export interface MainLayoutProps {
@@ -76,7 +76,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <a href="/patient-info" className="group block w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div className="relative rounded-full h-8 w-8 bg-gray-400">
                     <span className="text-white text-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
