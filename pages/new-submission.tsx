@@ -1,7 +1,7 @@
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BackButton } from '../components/shared/BackButton'
@@ -28,7 +28,7 @@ export default function NewSubmissionPage() {
   const { mutate } = useMutation({
     mutationFn: storeSubmission,
     onSuccess: () => {
-      toast.success('Submission successfully send', {
+      toast.success('Submission successfully sent', {
         position: 'top-right',
       })
       reset()
@@ -40,10 +40,6 @@ export default function NewSubmissionPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    mutate(data)
-  }
-
   return (
     <MainLayout userType="PATIENT">
       <div className="px-3">
@@ -52,7 +48,7 @@ export default function NewSubmissionPage() {
           <h1 className="mt-2 text-xl text-gray-900">New Submission</h1>
         </div>
       </div>
-      <form className="w-[513px] mt-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-[513px] mt-4" onSubmit={handleSubmit((data)=> { mutate(data) })}>
         <div className="w-full flex flex-row items-center justify-between">
           <BaseInput
             label="Title"
