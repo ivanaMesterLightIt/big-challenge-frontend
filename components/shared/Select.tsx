@@ -2,17 +2,12 @@ import { Fragment, useState, FC } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { tw } from '../../utils/tw';
-// import { twMerge } from 'tailwind-merge'
-// import classnames from 'classnames'
 
 interface SelectProps {
-  options: { id: number; name: string }[]
-  defaultSelected?: { id: number; name: string }
-  onSelect: (value: { id: number; name: string }) => void
+  options: { id: string; name: string }[]
+  defaultSelected?: { id: string; name: string }
+  onSelect: (value: { id: string; name: string }) => void
 }
-
-// export const tw: typeof classnames = (...params) =>
-//   twMerge(classnames(...params))
 
 export const Select: FC<SelectProps> = ({
   options,
