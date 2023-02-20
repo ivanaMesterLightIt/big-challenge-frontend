@@ -7,7 +7,7 @@ import { BackButton } from '../components/shared/BackButton'
 import { BaseInput } from '../components/shared/BaseInput'
 import { BaseTextArea } from '../components/shared/BaseTextArea'
 import { BaseButton } from '../components/shared/BaseButton'
-import { storePatientInfo } from '../api/patient'
+import { postPatientInfo } from '../api/patient'
 import toast, { Toaster } from 'react-hot-toast'
 
 const patientInfoSchema = z.object({
@@ -36,7 +36,7 @@ export default function PatientInfoPage() {
     return newData
   }
   const { mutate } = useMutation({
-    mutationFn: storePatientInfo,
+    mutationFn: postPatientInfo,
     onSuccess: () => {
       toast.success('Information successfully updated', {
         position: 'top-right',

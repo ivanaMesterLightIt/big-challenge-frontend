@@ -4,12 +4,14 @@ import React, { TextareaHTMLAttributes } from 'react'
 interface BaseTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
+  error?: string | boolean | { message?: string }
+  errorMessage?: string
 }
 
 export const BaseTextArea = React.forwardRef<
   HTMLTextAreaElement,
   BaseTextAreaProps
->(({ label, name, ...props }, ref) => {
+>(({ label, name, error = false, errorMessage, ...props }, ref) => {
   return (
     <div className="w-full">
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
@@ -24,6 +26,11 @@ export const BaseTextArea = React.forwardRef<
           {...props}
         />
       </div>
+      <div className="h-4">
+          {!!error && (
+            <span className="text-red-500 text-xs">{errorMessage}</span>
+          )}
+        </div>
     </div>
   )
 })
