@@ -12,12 +12,12 @@ export type Submission = {
   title: string
   symptoms: string
 }
-export const storePatientInfo = (patientInfo: PatientInfo) =>
+export const postPatientInfo = (patientInfo: PatientInfo) =>
   axios
     .post(`${baseURL}/info`, patientInfo, { headers: getAuthedHeaders() })
     .then(({ data }) => data)
 
-export const storeSubmission = (submission: Submission) =>
+export const postSubmission = (submission: Submission) =>
   axios
     .post(`${baseURL}/submissions`, submission, { headers: getAuthedHeaders() })
     .then(({ data }) => data)

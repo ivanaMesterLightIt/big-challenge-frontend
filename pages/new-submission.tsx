@@ -8,7 +8,7 @@ import { BackButton } from '../components/shared/BackButton'
 import { BaseButton } from '../components/shared/BaseButton'
 import { BaseInput } from '../components/shared/BaseInput'
 import { BaseTextArea } from '../components/shared/BaseTextArea'
-import { storeSubmission } from '../api/patient'
+import { postSubmission } from '../api/patient'
 
 const submissionSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -26,7 +26,7 @@ export default function NewSubmissionPage() {
   } = useForm<FormValues>({ resolver: zodResolver(submissionSchema) })
 
   const { mutate } = useMutation({
-    mutationFn: storeSubmission,
+    mutationFn: postSubmission,
     onSuccess: () => {
       toast.success('Submission successfully sent', {
         position: 'top-right',
