@@ -2,8 +2,10 @@ import axios from 'axios'
 import { baseURL, getAuthedHeaders } from '../common'
 
 export const getMySubmissions = () =>
-  axios.get(`${baseURL}/my-submissions`, { headers: getAuthedHeaders() }).then(({ data }) => data)
-  
+  axios
+    .get(`${baseURL}/my-submissions`, { headers: getAuthedHeaders() })
+    .then(({ data }) => data)
+
 export const getSubmissionById = (submissionId: string) =>
   axios
     .get(`${baseURL}/submissions/${submissionId}`, {
@@ -24,3 +26,21 @@ export const finishSubmission = (submissionId: string) =>
       headers: getAuthedHeaders(),
     })
     .then(({ data }) => data)
+
+export const uploadFileToSubmission = async (data: {
+  fileName: File
+  id: string
+}) => {
+  const fileData = new FormData()
+  fileData.append('uploadedFile', data.fileName)
+  const response = await axios.post(`${baseURL}/upload/${data.id}`, fileData, {
+    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
+  })
+  return response.data
+}
+
+export const downloadSubmissionFile = (submissionId: string) =>
+  axios
+    .get(`${baseURL}/download/${submissionId}`, { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } })
+    .then(({ data }) => data)
+

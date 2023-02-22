@@ -2,8 +2,10 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import Router from 'next/router'
 import {
   assignDoctorToSubmission,
+  downloadSubmissionFile,
   finishSubmission,
   getSubmissionById,
+  uploadFileToSubmission,
 } from '../../api/submission'
 import { MainLayout } from '../../components/layouts/mainLayout'
 import { BackButton } from '../../components/shared/BackButton'
@@ -15,13 +17,20 @@ import {
   PaperClipIcon,
 } from '@heroicons/react/24/outline'
 import toast, { Toaster } from 'react-hot-toast'
+import { useState } from 'react'
 
 export default function SubmissionPage() {
+  const [fileData, setFileData] = useState<{ id: string; fileName: File }>()
+
   const getSubmissionId = (): string => {
     return Router.query.id as string
   }
 
-  const { data: submissionsData, status, refetch } = useQuery(
+  const {
+    data: submissionsData,
+    status,
+    refetch,
+  } = useQuery(
     ['getSubmissionById'],
     async () => await getSubmissionById(getSubmissionId()),
   )
@@ -56,12 +65,40 @@ export default function SubmissionPage() {
     },
   })
 
+  const uploadFile = useMutation({
+    mutationFn: uploadFileToSubmission,
+    onSuccess: () => {
+      toast.success('File uploaded', {
+        position: 'top-right',
+      })
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
+        position: 'top-right',
+      })
+    },
+  })
+
+  const downloadFile = useMutation({
+    mutationFn: downloadSubmissionFile,
+    onSuccess: () => {
+      toast.success('File downloaded', {
+        position: 'top-right',
+      })
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
+        position: 'top-right',
+      })
+    },
+  })
+
   return (
     <MainLayout userType="DOCTOR">
       {status === 'success' && submissionsData && (
         <div>
           <div className="px-3">
-            <BackButton returnTo={'/patient-home'} />
+            <BackButton returnTo={'/doctor-home'} />
             <div className="border-b border-gray-300 pb-5 mb-3">
               <div className="flex flex-row items-center justify-between">
                 <div>
@@ -97,6 +134,7 @@ export default function SubmissionPage() {
                       buttonClass={'primary'}
                       text={'Finish submission'}
                       onClick={() => {
+                        uploadFile.mutateAsync(fileData!)
                         completeSubmission.mutateAsync(
                           Router.query.id as string,
                         )
@@ -151,6 +189,12 @@ export default function SubmissionPage() {
                     id="prescriptionFile"
                     name="filename"
                     disabled={submissionsData.status === 'pending'}
+                    onChange={e =>
+                      setFileData({
+                        id: submissionsData.id,
+                        fileName: e.target.files![0],
+                      })
+                    }
                     className={tw(
                       submissionsData.status != 'pending'
                         ? 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-800'
@@ -164,7 +208,7 @@ export default function SubmissionPage() {
                     <PaperClipIcon className="h-5 w-5 text-gray-500 mr-2" />
                     <span className="text-xs">prescription.txt</span>
                   </div>
-                  <a className="cursor-pointer text-right text-blue-600 hover:text-blue-400 font-semibold text-xs">
+                  <a onClick={() => { downloadFile.mutateAsync(submissionsData.id) }} className="cursor-pointer text-right text-blue-600 hover:text-blue-400 font-semibold text-xs">
                     Download
                   </a>
                 </div>
