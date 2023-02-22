@@ -41,6 +41,6 @@ export const uploadFileToSubmission = async (data: {
 
 export const downloadSubmissionFile = (submissionId: string) =>
   axios
-    .get(`${baseURL}/download/${submissionId}`, { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } })
+    .get(`${baseURL}/download/${submissionId}`, { headers: getAuthedHeaders()})
     .then(({ data }) => data)
 
