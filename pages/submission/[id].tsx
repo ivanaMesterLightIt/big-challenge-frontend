@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import {
   assignDoctorToSubmission,
   downloadSubmissionFile,
@@ -23,22 +23,22 @@ import Modal from 'react-modal'
 export default function SubmissionPage() {
   const [fileData, setFileData] = useState<{ id: string; fileName: File }>()
   const [modalIsOpen, setIsOpen] = useState(false)
+  const router = useRouter();
 
   const closeModal = () => {
     setIsOpen(false)
   }
 
-  const getSubmissionId = (): string => {
-    return Router.query.id as string
-  }
+  const submissionId = router.query.id as string | undefined
 
   const {
     data: submissionsData,
     status,
     refetch,
   } = useQuery(
-    ['getSubmissionById'],
-    async () => await getSubmissionById(getSubmissionId()),
+    ['getSubmissionById', submissionId],
+    () => getSubmissionById(submissionId!),
+    { enabled: !!submissionId },
   )
 
   const assignDoctor = useMutation({
@@ -129,7 +129,7 @@ export default function SubmissionPage() {
                       buttonClass={'primary'}
                       text={'Accept submission'}
                       onClick={() => {
-                        assignDoctor.mutateAsync(Router.query.id as string)
+                        assignDoctor.mutateAsync(submissionId!)
                       }}
                     />
                   </div>
@@ -140,9 +140,9 @@ export default function SubmissionPage() {
                       buttonClass={'primary'}
                       text={'Finish submission'}
                       onClick={() => {
-                        uploadFile.mutateAsync(fileData!)
+                        if(fileData) {uploadFile.mutateAsync(fileData!)}
                         completeSubmission.mutateAsync(
-                          Router.query.id as string,
+                          submissionId!
                         )
                       }}
                     />
