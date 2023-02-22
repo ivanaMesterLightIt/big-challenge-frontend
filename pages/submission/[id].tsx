@@ -18,9 +18,15 @@ import {
 } from '@heroicons/react/24/outline'
 import toast, { Toaster } from 'react-hot-toast'
 import { useState } from 'react'
+import Modal from 'react-modal'
 
 export default function SubmissionPage() {
   const [fileData, setFileData] = useState<{ id: string; fileName: File }>()
+  const [modalIsOpen, setIsOpen] = useState(false)
+
+  const closeModal = () => {
+    setIsOpen(false)
+  }
 
   const getSubmissionId = (): string => {
     return Router.query.id as string
@@ -208,7 +214,12 @@ export default function SubmissionPage() {
                     <PaperClipIcon className="h-5 w-5 text-gray-500 mr-2" />
                     <span className="text-xs">prescription.txt</span>
                   </div>
-                  <a onClick={() => { downloadFile.mutateAsync(submissionsData.id) }} className="cursor-pointer text-right text-blue-600 hover:text-blue-400 font-semibold text-xs">
+                  <a
+                    onClick={() => {
+                      downloadFile.mutateAsync(submissionsData.id)
+                      setIsOpen(true)
+                    }}
+                    className="cursor-pointer text-right text-blue-600 hover:text-blue-400 font-semibold text-xs">
                     Download
                   </a>
                 </div>
@@ -228,6 +239,38 @@ export default function SubmissionPage() {
             </div>
           </div>
           <Toaster />
+          <Modal
+            style={{
+              content: {
+                borderRadius: '10px',
+                width: '500px',
+                height: '350px',
+                padding: '30px',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                right: 'auto',
+                bottom: 'auto',
+                marginRight: '-50%',
+                transform: 'translate(-50%, -50%)',
+              },
+            }}
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}>
+            <div>
+              <div className="absolute top-3 w-[450px] flex flex-row items-center justify-between">
+                <p className="text-gray-500 font-semibold">Prescription</p>
+                <a
+                  onClick={closeModal}
+                  className="text-xs text-gray-400 cursor-pointer pr-3">
+                  Close X
+                </a>
+              </div>
+              <div className="absolute top-10 text-xs pr-7 py-2 text-justify">
+                {downloadFile.data}
+              </div>
+            </div>
+          </Modal>
         </div>
       )}
     </MainLayout>
