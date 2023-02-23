@@ -134,7 +134,7 @@ export default function SubmissionPage() {
                     />
                   </div>
                 )}
-                {submissionsData.status === 'in_progress' && (
+                {submissionsData.status === 'in progress' && (
                   <div className="w-[200px]">
                     <BaseButton
                       buttonClass={'primary'}
