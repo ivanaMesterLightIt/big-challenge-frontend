@@ -61,11 +61,6 @@ export const useSubmission = (submissionId?: string) => {
   
     const downloadFileMutation = useMutation({
       mutationFn: downloadSubmissionFile,
-      onSuccess: () => {
-        toast.success('File downloaded', {
-          position: 'top-right',
-        })
-      },
       onError: (error: any) => {
         toast.error(error.response.data.message, {
           position: 'top-right',
