@@ -16,9 +16,9 @@ export default function PatientHomePage() {
   )
 
   const submissions =
-    submissionsData?.data.map(submission => ({
+    submissionsData?.map(submission => ({
       submissionTitle: submission.title,
-      doctorAssigned: submission.doctor ? submission.doctor : '',
+      doctorAssigned: submission.doctor ? submission.doctor.name : '-',
       createdAt: submission.created_at,
       status: submission.status,
     })) ?? []

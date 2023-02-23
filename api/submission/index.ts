@@ -1,18 +1,6 @@
 import axios from 'axios'
 import { baseURL, getAuthedHeaders } from '../common'
-
-interface user {
-  name: string
-  email: string
-  id: string
-  info: {
-    phone: string
-    weight: string
-    height: string
-    info: string
-  }
-  roles: [{ name: 'doctor' | 'patient' }]
-}
+import { User } from '../models/user'
 
 interface Submission {
   id: string
@@ -21,8 +9,8 @@ interface Submission {
   symptoms: string
   created_at: string
   prescription: string
-  doctor?: user
-  patient: user
+  doctor?: User
+  patient: User
 }
 type BadStatus = 'pending' | 'in progress' | 'in_progress' | 'done'
 type BadSubmission = Omit<Submission, 'status'> & { status: BadStatus }
