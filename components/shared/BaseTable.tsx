@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { useRouter } from 'next/router';
 import { useReducer, useState } from 'react'
 import { tw } from '../../utils/tw'
 import { Pill } from './Pill'
@@ -14,12 +15,18 @@ export interface BaseTableProps<TData extends object> {
 }
 
 export const BaseTable = <TData extends object>({ columns, tableData }: BaseTableProps<TData>) => {
+  const router = useRouter()
   const [data, setData] = useState(() => [...tableData])
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      columnVisibility: {
+        'id': false
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
   })
   return (
@@ -99,7 +106,9 @@ export const BaseTable = <TData extends object>({ columns, tableData }: BaseTabl
                   fontWeight: 'normal',
                   padding: '12px 12px',
                 }}>
-                View more
+                  <a onClick={() => {
+                    router.push(`/submission/${row.original.id!}`)
+                  }}>View more</a>
               </td>
             </tr>
           ))}
