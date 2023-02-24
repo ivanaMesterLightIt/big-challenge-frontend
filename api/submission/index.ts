@@ -20,6 +20,14 @@ function cleanSubmission(s: BadSubmission) {
   }
   return s as Submission
 }
+export const getSubmissions = async () => {
+  const response = await axios
+    .get<{ data: BadSubmission[] }>(`${baseURL}/submissions`, {
+      headers: getAuthedHeaders(),
+    })
+    .then(({ data }) => data.data.map(cleanSubmission))
+  return response as Submission[]
+}
 export const getMySubmissions = async () => {
   const response = await axios
     .get<{ data: BadSubmission[] }>(`${baseURL}/my-submissions`, {
