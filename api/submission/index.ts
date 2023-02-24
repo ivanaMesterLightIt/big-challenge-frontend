@@ -18,7 +18,7 @@ function cleanSubmission(s: BadSubmission) {
   if (s.status === 'in_progress') {
     return { ...s, status: 'in progress' }
   }
-  return s
+  return s as Submission
 }
 export const getMySubmissions = async () => {
   const response = await axios
