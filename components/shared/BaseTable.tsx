@@ -9,12 +9,12 @@ import { useReducer, useState } from 'react'
 import { tw } from '../../utils/tw'
 import { Pill } from './Pill'
 
-export interface BaseTableProps<TData extends object> {
+export interface BaseTableProps<TData extends { id: string }> {
   tableData: TData[];
   columns: ColumnDef<TData, any>[];
 }
 
-export const BaseTable = <TData extends object>({ columns, tableData }: BaseTableProps<TData>) => {
+export const BaseTable = <TData extends { id: string }>({ columns, tableData }: BaseTableProps<TData>) => {
   const router = useRouter()
   const [data, setData] = useState(() => [...tableData])
   const rerender = useReducer(() => ({}), {})[1]
@@ -107,7 +107,7 @@ export const BaseTable = <TData extends object>({ columns, tableData }: BaseTabl
                   padding: '12px 12px',
                 }}>
                   <a onClick={() => {
-                    router.push(`/submission/${row.original.id!}`)
+                    router.push(`/submission/${row.original.id}`)
                   }}>View more</a>
               </td>
             </tr>
