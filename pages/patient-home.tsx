@@ -17,6 +17,7 @@ export default function PatientHomePage() {
 
   const submissions =
     submissionsData?.map(submission => ({
+      id: submission.id,
       submissionTitle: submission.title,
       doctorAssigned: submission.doctor ? submission.doctor.name : '-',
       createdAt: submission.created_at,
@@ -26,6 +27,10 @@ export default function PatientHomePage() {
   const columnHelper = createColumnHelper<PatientSubmission>()
 
   const columns = [
+    columnHelper.accessor('id', {
+      id: 'id',
+      header: () => 'ID',
+    }),
     columnHelper.accessor('submissionTitle', {
       id: 'submissionTitle',
       header: () => 'Submission Title',
