@@ -8,6 +8,7 @@ import {
 import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../../api/user'
+import Link from 'next/link'
 
 const patientNavigation = [
   { name: 'Home', href: '/patient-home', icon: HomeIcon },
@@ -76,7 +77,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="/patient-info" className="group block w-full flex-shrink-0">
+              <Link href="/patient-info" className="group block w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div className="relative rounded-full h-8 w-8 bg-gray-400">
                     <span className="text-white text-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -88,7 +89,8 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                     <button 
                     className="text-xs text-gray-300 group-hover:underline"
                     onClick={(e) => {
-                      e.stopPropagation();
+                      e.stopPropagation()
+                      e.preventDefault()
                       mutate()
                     }}
                     >
@@ -96,7 +98,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
                     </button>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
