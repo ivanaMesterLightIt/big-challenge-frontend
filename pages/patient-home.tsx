@@ -69,7 +69,7 @@ export default function PatientHomePage() {
       </div>
       {!!submissionsData && (
         <BaseTable
-          tableData={
+          data={
             selectedStatus === 'all'
               ? submissions
               : submissions.filter(

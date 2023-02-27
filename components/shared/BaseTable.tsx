@@ -9,16 +9,15 @@ import { tw } from '../../utils/tw'
 import { Pill } from './Pill'
 
 export interface BaseTableProps<TData extends { id: string }> {
-  tableData: TData[]
+  data: TData[]
   columns: ColumnDef<TData, any>[]
 }
 
 export const BaseTable = <TData extends { id: string }>({
   columns,
-  tableData,
+  data,
 }: BaseTableProps<TData>) => {
   const router = useRouter()
-  const data = tableData
 
   const table = useReactTable({
     data,
