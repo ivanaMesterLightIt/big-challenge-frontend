@@ -16,7 +16,8 @@ export interface BaseTableProps<TData extends { id: string }> {
 
 export const BaseTable = <TData extends { id: string }>({ columns, tableData }: BaseTableProps<TData>) => {
   const router = useRouter()
-  const [data, setData] = useState(() => [...tableData])
+  //const [data, setData] = useState(tableData)
+  const data = tableData;
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useReactTable({

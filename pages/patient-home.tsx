@@ -10,7 +10,7 @@ import { PatientSubmission } from '../types/submissions'
 export default function PatientHomePage() {
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  const { data: submissionsData, status } = useQuery(
+  const { data: submissionsData } = useQuery(
     ['getMySubmissions'],
     async () => await getMySubmissions(),
   )
@@ -67,30 +67,15 @@ export default function PatientHomePage() {
         />
         </div>
       </div>
-      {status === 'success' && selectedStatus === 'all' && (
-        <BaseTable tableData={submissions} columns={columns} />
-      )}
-      {status === 'success' && selectedStatus === 'pending' && (
+      {!!submissionsData && (
         <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'pending',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'in progress' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'in progress',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'done' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'done',
-          )}
+          tableData={
+            selectedStatus === 'all'
+              ? submissions
+              : submissions.filter(
+                  submission => submission.status === selectedStatus,
+                )
+          }
           columns={columns}
         />
       )}

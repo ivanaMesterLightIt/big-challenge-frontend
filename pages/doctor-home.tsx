@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper } from '@tanstack/react-table'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getSubmissions } from '../api/submission'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
@@ -10,7 +10,7 @@ import { DoctorSubmission } from '../types/submissions'
 export default function DoctorHomePage() {
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  const { data: submissionsData, status } = useQuery(
+  const { data: submissionsData } = useQuery(
     ['getSubmissions'],
     async () => await getSubmissions(),
   )
@@ -55,42 +55,28 @@ export default function DoctorHomePage() {
     { id: 'done', name: 'Done' },
   ]
 
+  useEffect(() => {}, [selectedStatus])
   return (
     <MainLayout userType="DOCTOR">
-      <div className='w-full pr-2 flex flex-row justify-end'>
-        <div className='w-[200px]'>
-        <Select
-          options={selectOptions}
-          onSelect={e => {
-            setSelectedStatus(e.id)
-          }}
-        />
+      <div className="w-full pr-2 flex flex-row justify-end">
+        <div className="w-[200px]">
+          <Select
+            options={selectOptions}
+            onSelect={e => {
+              setSelectedStatus(e.id)
+            }}
+          />
         </div>
       </div>
-      {status === 'success' && selectedStatus === 'all' && (
-        <BaseTable tableData={submissions} columns={columns} />
-      )}
-      {status === 'success' && selectedStatus === 'pending' && (
+      {!!submissionsData && (
         <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'pending',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'in progress' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'in progress',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'done' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'done',
-          )}
+          tableData={
+            selectedStatus === 'all'
+              ? submissions
+              : submissions.filter(
+                  submission => submission.status === selectedStatus,
+                )
+          }
           columns={columns}
         />
       )}
