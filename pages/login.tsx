@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 import { loginUser } from '../api/user'
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
   email: z
@@ -43,6 +44,11 @@ export default function LoginPage() {
       else{
         router.push('/patient-home')
       }
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
+        position: 'top-right',
+      })
     },
   })
 

@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import toast from 'react-hot-toast'
 
 const registerSchema = z
   .object({
@@ -61,6 +62,11 @@ export default function SignUpPage() {
     mutationFn: registerUser,
     onSuccess: () => {
       router.push('/login')
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
+        position: 'top-right',
+      })
     },
   })
 
