@@ -1,4 +1,5 @@
 export type PatientSubmission = {
+    id: string,
     submissionTitle: string,
     doctorAssigned: string,
     createdAt: string,
@@ -6,6 +7,7 @@ export type PatientSubmission = {
 }
 
 export type DoctorSubmission = {
+    id: string,
     submissionTitle: string,
     patientName: string,
     createdAt: string,

@@ -10,13 +10,14 @@ import { PatientSubmission } from '../types/submissions'
 export default function PatientHomePage() {
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  const { data: submissionsData, status } = useQuery(
+  const { data: submissionsData } = useQuery(
     ['getMySubmissions'],
     async () => await getMySubmissions(),
   )
 
   const submissions =
     submissionsData?.map(submission => ({
+      id: submission.id,
       submissionTitle: submission.title,
       doctorAssigned: submission.doctor ? submission.doctor.name : '-',
       createdAt: submission.created_at,
@@ -26,6 +27,10 @@ export default function PatientHomePage() {
   const columnHelper = createColumnHelper<PatientSubmission>()
 
   const columns = [
+    columnHelper.accessor('id', {
+      id: 'id',
+      header: () => 'ID',
+    }),
     columnHelper.accessor('submissionTitle', {
       id: 'submissionTitle',
       header: () => 'Submission Title',
@@ -62,30 +67,15 @@ export default function PatientHomePage() {
         />
         </div>
       </div>
-      {status === 'success' && selectedStatus === 'all' && (
-        <BaseTable tableData={submissions} columns={columns} />
-      )}
-      {status === 'success' && selectedStatus === 'pending' && (
+      {!!submissionsData && (
         <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'pending',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'in progress' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'in progress',
-          )}
-          columns={columns}
-        />
-      )}
-      {status === 'success' && selectedStatus === 'done' && (
-        <BaseTable
-          tableData={submissions.filter(
-            submission => submission.status === 'done',
-          )}
+          data={
+            selectedStatus === 'all'
+              ? submissions
+              : submissions.filter(
+                  submission => submission.status === selectedStatus,
+                )
+          }
           columns={columns}
         />
       )}

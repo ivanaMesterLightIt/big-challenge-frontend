@@ -4,22 +4,29 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useReducer, useState } from 'react'
+import { useRouter } from 'next/router'
 import { tw } from '../../utils/tw'
 import { Pill } from './Pill'
 
-export interface BaseTableProps<TData extends object> {
-  tableData: TData[];
-  columns: ColumnDef<TData, any>[];
+export interface BaseTableProps<TData extends { id: string }> {
+  data: TData[]
+  columns: ColumnDef<TData, any>[]
 }
 
-export const BaseTable = <TData extends object>({ columns, tableData }: BaseTableProps<TData>) => {
-  const [data, setData] = useState(() => [...tableData])
-  const rerender = useReducer(() => ({}), {})[1]
+export const BaseTable = <TData extends { id: string }>({
+  columns,
+  data,
+}: BaseTableProps<TData>) => {
+  const router = useRouter()
 
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      columnVisibility: {
+        id: false,
+      },
+    },
     getCoreRowModel: getCoreRowModel(),
   })
   return (
@@ -99,7 +106,12 @@ export const BaseTable = <TData extends object>({ columns, tableData }: BaseTabl
                   fontWeight: 'normal',
                   padding: '12px 12px',
                 }}>
-                View more
+                <a
+                  onClick={() => {
+                    router.push(`/submission/${row.original.id}`)
+                  }}>
+                  View more
+                </a>
               </td>
             </tr>
           ))}
