@@ -36,7 +36,13 @@ export default function LoginPage() {
     mutationFn: loginUser,
     onSuccess: data => {
       localStorage.setItem('token', data.token)
-      router.push('/patient-home')
+      console.log({data})
+      if(data.user.roles[0].name === 'doctor'){
+        router.push('/doctor-home')
+      }
+      else{
+        router.push('/patient-home')
+      }
     },
   })
 

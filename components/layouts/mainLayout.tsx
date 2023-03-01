@@ -6,9 +6,10 @@ import {
   PlusCircleIcon,
 } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
-import { useMutation } from '@tanstack/react-query'
-import { logoutUser } from '../../api/user'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getUser, logoutUser } from '../../api/user'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 const patientNavigation = [
   { name: 'Home', href: '/patient-home', icon: HomeIcon },
@@ -32,7 +33,9 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   const navigation =
     userType === 'DOCTOR' ? doctorNavigation : patientNavigation
 
-  const userName = 'Tom Cook'
+  const { data: userLoggedIn } = useQuery(['getUser'], getUser)
+
+  const userName = userLoggedIn?.name
 
   const { mutate } = useMutation({
     mutationFn: logoutUser,
@@ -40,11 +43,13 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
       localStorage.removeItem('token')
       router.push('/login')
     },
-    onError: (error) => {
-      console.log('error' ,error)
-    }
+    onError: () => {
+      toast.error('Sorry, there was a problem logging out', {
+        position: 'top-right',
+      })
+    },
   })
-  
+
   return (
     <>
       <div>
@@ -77,23 +82,33 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <Link href="/patient-info" className="group block w-full flex-shrink-0">
+              <Link
+                href="/patient-info"
+                className={tw(
+                  userLoggedIn?.roles[0].name === 'doctor'
+                    ? 'group block w-full flex-shrink-0 cursor-default'
+                    : 'group block w-full flex-shrink-0',
+                )}
+                onClick={e => {
+                  if (userLoggedIn?.roles[0].name === 'doctor') {
+                    e.preventDefault()
+                  }
+                }}>
                 <div className="flex items-center">
                   <div className="relative rounded-full h-8 w-8 bg-gray-400">
                     <span className="text-white text-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      { userName.slice(0,1) }
+                      {userName?.slice(0, 1)}
                     </span>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-white">{ userName }</p>
-                    <button 
-                    className="text-xs text-gray-300 group-hover:underline"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                      mutate()
-                    }}
-                    >
+                    <p className="text-sm text-white">{userName}</p>
+                    <button
+                      className="text-xs text-gray-300 group-hover:underline"
+                      onClick={e => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        mutate()
+                      }}>
                       Sign out
                     </button>
                   </div>
