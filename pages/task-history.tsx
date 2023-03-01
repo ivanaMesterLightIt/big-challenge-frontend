@@ -6,10 +6,9 @@ import { BaseTable } from '../components/shared/BaseTable'
 import { DoctorSubmission } from '../types/submissions'
 
 export default function TaskHistoryPage() {
-
   const { data: submissionsData } = useQuery(
     ['getMySubmissions'],
-    async () => await getMySubmissions(),
+    getMySubmissions,
   )
 
   const submissions =
@@ -47,12 +46,7 @@ export default function TaskHistoryPage() {
 
   return (
     <MainLayout userType="DOCTOR">
-      {!!submissionsData && (
-        <BaseTable
-          data={submissions}
-          columns={columns}
-        />
-      )}
+      {!!submissionsData && <BaseTable data={submissions} columns={columns} />}
     </MainLayout>
   )
 }
