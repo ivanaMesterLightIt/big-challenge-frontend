@@ -42,8 +42,8 @@ export default function PatientInfoPage() {
         position: 'top-right',
       })
     },
-    onError: () => {
-      toast.error('Sorry, information could not be updated', {
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
         position: 'top-right',
       })
     },

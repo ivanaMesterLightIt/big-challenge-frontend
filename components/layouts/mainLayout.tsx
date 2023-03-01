@@ -43,8 +43,8 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
       localStorage.removeItem('token')
       router.push('/login')
     },
-    onError: () => {
-      toast.error('Sorry, there was a problem logging out', {
+    onError: (error: any) => {
+      toast.error(error.response.data.message, {
         position: 'top-right',
       })
     },
