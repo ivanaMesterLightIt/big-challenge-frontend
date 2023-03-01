@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { getUser, logoutUser } from '../../api/user'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 const patientNavigation = [
   { name: 'Home', href: '/patient-home', icon: HomeIcon },
@@ -32,10 +33,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   const navigation =
     userType === 'DOCTOR' ? doctorNavigation : patientNavigation
 
-  const { data: userLoggedIn } = useQuery(
-    ['getUser'],
-    async () => await getUser(),
-  )
+  const { data: userLoggedIn } = useQuery(['getUser'], getUser)
 
   const userName = userLoggedIn?.name
 
@@ -45,8 +43,10 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
       localStorage.removeItem('token')
       router.push('/login')
     },
-    onError: error => {
-      console.log('error', error)
+    onError: () => {
+      toast.error('Sorry, there was a problem logging out', {
+        position: 'top-right',
+      })
     },
   })
 
