@@ -11,8 +11,10 @@ export interface User {
   id: number
   name: string
   email: string
-  roles: {
-    name: 'doctor' | 'patient'
-  }
+  roles: [
+    {
+      name: 'doctor' | 'patient'
+    }
+  ]
   info: UserPersonalData
 }
