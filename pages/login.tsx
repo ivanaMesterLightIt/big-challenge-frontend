@@ -91,7 +91,7 @@ export default function LoginPage() {
           <span className="text-gray-500 mr-1">Don't have an account yet?</span>
           <a
             onClick={() => {
-              router.push('/signUp')
+              router.push('/sign-up')
             }}
             className="text-blue-600 hover:underline cursor-pointer">
             Sign up
