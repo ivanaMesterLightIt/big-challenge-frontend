@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import {
   InformationCircleIcon,
   PaperClipIcon,
+  NoSymbolIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import Modal from 'react-modal'
@@ -11,6 +12,8 @@ import { BaseButton } from '../../components/shared/BaseButton'
 import { Pill } from '../../components/shared/Pill'
 import { tw } from '../../utils/tw'
 import { useSubmission } from '../../hooks/useSubmission'
+import { useQuery } from '@tanstack/react-query'
+import { getUser } from '../../api/user'
 const modalStyle: Modal.Styles = {
   content: {
     borderRadius: '10px',
@@ -29,6 +32,8 @@ const modalStyle: Modal.Styles = {
 export default function SubmissionPage() {
   const [fileData, setFileData] = useState<{ id: string; fileName: File }>()
   const [modalIsOpen, setIsOpen] = useState(false)
+  const { data: userData } = useQuery(['getUser'], getUser)
+  const isUserDoctor = userData?.roles[0].name === 'doctor'
   const router = useRouter()
   const closeModal = () => {
     setIsOpen(false)
@@ -44,15 +49,18 @@ export default function SubmissionPage() {
   if (getSubmissionQuery.error) {
     return <MainLayout userType="DOCTOR">Error!</MainLayout>
   }
+  const userType: 'DOCTOR' | 'PATIENT' = isUserDoctor ? 'DOCTOR' : 'PATIENT'
   const submissionsData = getSubmissionQuery.data
   if (!submissionsData) {
-    return <MainLayout userType="DOCTOR">Loading!</MainLayout>
+    return <MainLayout userType={userType}>Loading!</MainLayout>
   }
   return (
-    <MainLayout userType="DOCTOR">
+    <MainLayout userType={userType}>
       <div>
         <div className="px-3">
-          <BackButton returnTo={'/doctor-home'} />
+          <BackButton
+            returnTo={isUserDoctor ? '/doctor-home' : '/patient-home'}
+          />
           <div className="border-b border-gray-300 pb-5 mb-3">
             <div className="flex flex-row items-center justify-between">
               <div>
@@ -71,7 +79,7 @@ export default function SubmissionPage() {
                   </span>
                 </div>
               </div>
-              {submissionsData.status === 'pending' && (
+              {submissionsData.status === 'pending' && isUserDoctor && (
                 <div className="w-[200px]">
                   <BaseButton
                     buttonClass={'primary'}
@@ -82,7 +90,7 @@ export default function SubmissionPage() {
                   />
                 </div>
               )}
-              {submissionsData.status === 'in progress' && (
+              {submissionsData.status === 'in progress' && isUserDoctor && (
                 <div className="w-[200px]">
                   <BaseButton
                     buttonClass={'primary'}
@@ -135,25 +143,27 @@ export default function SubmissionPage() {
               Prescriptions
             </span>
             {submissionsData.status != 'done' ? (
-              <div className="w-[128px] h-[46px] relative mt-2">
-                <input
-                  type="file"
-                  id="prescriptionFile"
-                  name="filename"
-                  disabled={submissionsData.status === 'pending'}
-                  onChange={e =>
-                    setFileData({
-                      id: submissionsData.id,
-                      fileName: e.target.files![0],
-                    })
-                  }
-                  className={tw(
-                    submissionsData.status != 'pending'
-                      ? 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-800'
-                      : 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 opacity-50',
-                  )}
-                />
-              </div>
+              isUserDoctor && (
+                <div className="w-[128px] h-[46px] relative mt-2">
+                  <input
+                    type="file"
+                    id="prescriptionFile"
+                    name="filename"
+                    disabled={submissionsData.status === 'pending'}
+                    onChange={e =>
+                      setFileData({
+                        id: submissionsData.id,
+                        fileName: e.target.files![0],
+                      })
+                    }
+                    className={tw(
+                      submissionsData.status != 'pending'
+                        ? 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-800'
+                        : 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 opacity-50',
+                    )}
+                  />
+                </div>
+              )
             ) : submissionsData.prescription ? (
               <div className="mt-2 w-full flex flex-row items-center justify-between p-3 rounded border border-gray-200">
                 <div className="flex flex-row items-center justify-start w-1/2">
@@ -174,11 +184,19 @@ export default function SubmissionPage() {
                 No prescriptions uploaded
               </span>
             )}
-            {submissionsData.status === 'pending' && (
+            {submissionsData.status === 'pending' && isUserDoctor && (
               <div className="mt-4 w-full bg-blue-100 rounded p-3 flex flex-row items-center justify-start">
                 <InformationCircleIcon className="h-5 w-5 text-blue-800" />
                 <span className="text-xs font-semibold text-blue-800 ml-2">
                   Accept this submission to add a diagnosis
+                </span>
+              </div>
+            )}
+            {submissionsData.status != 'done' && !isUserDoctor && (
+              <div className="mt-4 w-full bg-gray-100 rounded p-3 flex flex-row items-center justify-start">
+                <NoSymbolIcon className="h-5 w-5 text-gray-800" />
+                <span className="text-xs font-semibold text-gray-800 ml-2">
+                  No prescriptions have been added yet
                 </span>
               </div>
             )}
