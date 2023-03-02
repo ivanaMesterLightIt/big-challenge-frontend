@@ -1,6 +1,6 @@
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BackButton } from '../components/shared/BackButton'
@@ -9,6 +9,7 @@ import { BaseTextArea } from '../components/shared/BaseTextArea'
 import { BaseButton } from '../components/shared/BaseButton'
 import { postPatientInfo } from '../api/patient'
 import toast, { Toaster } from 'react-hot-toast'
+import { getUser } from '../api/user'
 
 const patientInfoSchema = z.object({
   phone: z.string().min(1, { message: 'Phone number is required' }),
@@ -20,6 +21,8 @@ const patientInfoSchema = z.object({
 export type FormValues = z.infer<typeof patientInfoSchema>
 
 export default function PatientInfoPage() {
+  const { data: userData } = useQuery(['getUser'], getUser)
+
   const {
     formState: { errors },
     register,
@@ -68,6 +71,7 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Phone number"
             type="number"
+            defaultValue={userData?.info?.phone}
             error={errors.phone}
             errorMessage={errors.phone?.message}
             {...register('phone')}
@@ -77,6 +81,7 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Weight"
             type="number"
+            defaultValue={userData?.info?.weight}
             error={errors.weight}
             errorMessage={errors.weight?.message}
             {...register('weight')}
@@ -84,13 +89,19 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Height"
             type="number"
+            defaultValue={userData?.info?.height}
             error={errors.height}
             errorMessage={errors.height?.message}
             {...register('height')}
           />
         </div>
         <div className="mt-1 w-full flex flex-row items-center justify-between px-3">
-          <BaseTextArea {...register('info')} label="Other info" rows={7} />
+          <BaseTextArea
+            {...register('info')}
+            defaultValue={userData?.info?.info}
+            label="Other info"
+            rows={7}
+          />
         </div>
         <div className="mt-6 w-1/3 px-3">
           <BaseButton
