@@ -1,7 +1,11 @@
+
 export default function HomePage() {
+
   return (
-    <>
-      <h1 className="text-3xl">Hello world!</h1>
-    </>
+    <div className="w-full h-screen flex flex-col items-center justify-center">
+      <h1 className="text-xl text-center font-semibold">
+        Welcome!
+      </h1>
+    </div>
   )
 }
