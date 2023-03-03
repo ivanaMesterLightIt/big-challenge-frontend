@@ -33,15 +33,14 @@ export default function LoginPage() {
     handleSubmit,
   } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: loginUser,
     onSuccess: data => {
       localStorage.setItem('token', data.token)
-      console.log({data})
-      if(data.user.roles[0].name === 'doctor'){
+      console.log({ data })
+      if (data.user.roles[0].name === 'doctor') {
         router.push('/doctor-home')
-      }
-      else{
+      } else {
         router.push('/patient-home')
       }
     },
@@ -84,7 +83,7 @@ export default function LoginPage() {
             />
           </div>
           <div className="mt-6 w-full px-3">
-            <BaseButton buttonClass="primary" text="Log in" type="submit" />
+            <BaseButton buttonClass="primary" text="Log in" type="submit" isLoading={isLoading} />
           </div>
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
