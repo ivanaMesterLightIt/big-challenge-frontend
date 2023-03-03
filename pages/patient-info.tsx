@@ -10,6 +10,7 @@ import { BaseButton } from '../components/shared/BaseButton'
 import { postPatientInfo } from '../api/patient'
 import toast, { Toaster } from 'react-hot-toast'
 import { getUser } from '../api/user'
+import { useEffect } from 'react'
 
 const patientInfoSchema = z.object({
   phone: z.string().min(1, { message: 'Phone number is required' }),
@@ -27,7 +28,13 @@ export default function PatientInfoPage() {
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<FormValues>({ resolver: zodResolver(patientInfoSchema) })
+    reset
+  } = useForm<FormValues>({ resolver: zodResolver(patientInfoSchema), defaultValues: {
+    phone: userData?.info?.phone,
+    weight: userData?.info?.weight,
+    height: userData?.info?.height,
+    info: userData?.info?.info
+  }})
 
   const getData = (data: FormValues) => {
     const newData = {
@@ -55,6 +62,10 @@ export default function PatientInfoPage() {
   const onSubmit: SubmitHandler<FormValues> = data => {
     mutate(getData(data))
   }
+
+  useEffect(() => {
+    reset()
+  }, [userData])
   return (
     <MainLayout userType="PATIENT">
       <div className="px-3">
@@ -71,7 +82,6 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Phone number"
             type="number"
-            defaultValue={userData?.info?.phone}
             error={errors.phone}
             errorMessage={errors.phone?.message}
             {...register('phone')}
@@ -81,7 +91,6 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Weight"
             type="number"
-            defaultValue={userData?.info?.weight}
             error={errors.weight}
             errorMessage={errors.weight?.message}
             {...register('weight')}
@@ -89,7 +98,6 @@ export default function PatientInfoPage() {
           <BaseInput
             label="Height"
             type="number"
-            defaultValue={userData?.info?.height}
             error={errors.height}
             errorMessage={errors.height?.message}
             {...register('height')}
@@ -98,7 +106,6 @@ export default function PatientInfoPage() {
         <div className="mt-1 w-full flex flex-row items-center justify-between px-3">
           <BaseTextArea
             {...register('info')}
-            defaultValue={userData?.info?.info}
             label="Other info"
             rows={7}
           />
