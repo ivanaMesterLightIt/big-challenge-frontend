@@ -58,7 +58,7 @@ export default function SignUpPage() {
     return newUserData
   }
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
       router.push('/login')
@@ -149,7 +149,7 @@ export default function SignUpPage() {
             </div>
           </div>
           <div className="mt-10 w-full px-3">
-            <BaseButton buttonClass="primary" text="Sign up" type="submit" />
+            <BaseButton buttonClass="primary" text="Sign up" type="submit" isLoading={isLoading} />
           </div>
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
