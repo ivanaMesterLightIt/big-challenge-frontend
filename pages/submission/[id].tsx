@@ -157,9 +157,10 @@ export default function SubmissionPage() {
                       })
                     }
                     className={tw(
-                      submissionsData.status != 'pending'
-                        ? 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-800'
-                        : 'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 opacity-50',
+                      'text-sm text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 ',
+                      submissionsData.status !== 'pending' &&
+                        'hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-800',
+                      submissionsData.status === 'pending' && 'opacity-50',
                     )}
                   />
                 </div>
