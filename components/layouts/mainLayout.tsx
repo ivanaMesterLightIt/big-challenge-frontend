@@ -41,6 +41,7 @@ export const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
     mutationFn: logoutUser,
     onSuccess: () => {
       localStorage.removeItem('token')
+      localStorage.removeItem('role')
       router.push('/login')
     },
     onError: (error: any) => {
