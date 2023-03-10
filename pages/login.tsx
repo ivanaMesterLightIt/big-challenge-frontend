@@ -37,11 +37,13 @@ export default function LoginPage() {
     mutationFn: loginUser,
     onSuccess: data => {
       localStorage.setItem('token', data.token)
-      console.log({ data })
+      localStorage.setItem('role', data.user.roles[0].name)
       if (data.user.roles[0].name === 'doctor') {
-        router.push('/doctor-home')
+        const returnUrl = router.query.returnUrl?.toString() || '/doctor-home'
+        router.push(returnUrl)
       } else {
-        router.push('/patient-home')
+        const returnUrl = router.query.returnUrl?.toString() || '/patient-home'
+        router.push(returnUrl)
       }
     },
     onError: (error: any) => {
