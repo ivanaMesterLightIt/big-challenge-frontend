@@ -12,7 +12,9 @@ import { postSubmission } from '../api/patient'
 
 const submissionSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
-  symptoms: z.string().min(10, { message: 'Symptoms must be at least 10 characters' }),
+  symptoms: z
+    .string()
+    .min(10, { message: 'Symptoms must be at least 10 characters' }),
 })
 
 export type FormValues = z.infer<typeof submissionSchema>
@@ -25,7 +27,7 @@ export default function NewSubmissionPage() {
     handleSubmit,
   } = useForm<FormValues>({ resolver: zodResolver(submissionSchema) })
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: postSubmission,
     onSuccess: () => {
       toast.success('Submission successfully sent', {
@@ -48,14 +50,18 @@ export default function NewSubmissionPage() {
           <h1 className="mt-2 text-xl text-gray-900">New Submission</h1>
         </div>
       </div>
-      <form className="w-[513px] mt-4" onSubmit={handleSubmit((data)=> { mutate(data) })}>
+      <form
+        className="w-[513px] mt-4"
+        onSubmit={handleSubmit(data => {
+          mutate(data)
+        })}>
         <div className="w-full flex flex-row items-center justify-between">
           <BaseInput
+            {...register('title')}
             label="Title"
             type="title"
             error={errors.title}
             errorMessage={errors.title?.message}
-            {...register('title')}
           />
         </div>
         <div className="mt-1 w-full flex flex-row items-center justify-between px-3">
@@ -72,6 +78,7 @@ export default function NewSubmissionPage() {
             buttonClass="primary"
             text="Send submission"
             type="submit"
+            disabled={isLoading}
           />
         </div>
       </form>

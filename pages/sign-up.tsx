@@ -22,18 +22,14 @@ const registerSchema = z
       .string()
       .min(1, { message: 'Password is required' })
       .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-        message: 'Invalid password',
+        message:
+          'Password must have at least 1 letter, 1 number and 8 characters',
       }),
-    repeatPassword: z
-      .string()
-      .min(1, { message: 'Password is required' })
-      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-        message: 'Invalid password',
-      }),
+    repeatPassword: z.string().min(1, { message: 'Password is required' }),
   })
   .refine(data => data.password === data.repeatPassword, {
     path: ['repeatPassword'],
-    message: "Password don't match",
+    message: "Passwords don't match",
   })
 
 export type FormValues = z.infer<typeof registerSchema>
@@ -149,7 +145,13 @@ export default function SignUpPage() {
             </div>
           </div>
           <div className="mt-10 w-full px-3">
-            <BaseButton buttonClass="primary" text="Sign up" type="submit" isLoading={isLoading} />
+            <BaseButton
+              buttonClass="primary"
+              text="Sign up"
+              type="submit"
+              isLoading={isLoading}
+              disabled={isLoading}
+            />
           </div>
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
