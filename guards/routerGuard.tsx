@@ -5,6 +5,28 @@ import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../api/user'
 import toast from 'react-hot-toast'
 
+const publicPaths = ['/login', '/sign-up', '/']
+const doctorPaths = ['/doctor-home', '/task-history', '/submission']
+const patientPaths = [
+  '/patient-home',
+  '/new-submission',
+  '/patient-info',
+  '/submission',
+]
+
+const pathsByRole = {
+  doctor: doctorPaths,
+  patient: patientPaths,
+  public: publicPaths,
+}
+
+function getRole(role: string | null) {
+  if (role === 'doctor' || role === 'patient') {
+    return role
+  }
+  return 'public'
+}
+
 export const RouteGuard: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
@@ -41,38 +63,24 @@ export const RouteGuard: FC<PropsWithChildren> = ({ children }) => {
   }, [])
 
   function authCheck(url: string) {
-    const publicPaths = ['/login', '/sign-up', '/']
-    const doctorPaths = ['/doctor-home', '/task-history', '/submission']
-    const patientPaths = [
-      '/patient-home',
-      '/new-submission',
-      '/patient-info',
-      '/submission',
-    ]
     const path = url.split('?')[0]
     const pathToCheck = '/' + path.split('/')[1]
-    if (
-      localStorage.getItem('token') === null &&
-      !publicPaths.includes(pathToCheck)
-    ) {
+    const role = getRole(localStorage.getItem('role'))
+
+    if (pathsByRole[role].includes(pathToCheck)) {
+      setAuthorized(true)
+    } else {
       setAuthorized(false)
       router.push({
-        pathname: '/login',
-        query: { returnUrl: router.asPath },
+        pathname: pathsByRole[role][0],
+        query: role === 'public' ? { returnUrl: router.asPath } : {},
       })
-    } else if (
-      !publicPaths.includes(pathToCheck) &&
-      localStorage.getItem('token') !== null &&
-      ((localStorage.getItem('role') === 'doctor' &&
-        !doctorPaths.includes(pathToCheck)) ||
-        (localStorage.getItem('role') === 'patient' &&
-          !patientPaths.includes(pathToCheck)))
-    ) {
-      mutate()
-    } else {
-      setAuthorized(true)
     }
   }
 
-  return authorized && children
+  if (!authorized) {
+    return <></>
+  }
+
+  return <>{children}</>
 }
