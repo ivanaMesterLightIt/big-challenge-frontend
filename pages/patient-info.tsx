@@ -4,9 +4,12 @@ import { BackButton } from '../components/shared/BackButton'
 import { getUser } from '../api/user'
 import { PatienInfoForm } from '../components/patientInfo/PatientInfoForm'
 import { Oval } from 'react-loader-spinner'
+import { showError } from '../utils/showError'
 
 export default function PatientInfoPage() {
-  const { data: userData, isLoading } = useQuery(['getUser'], getUser)
+  const { data: userData, isLoading } = useQuery(['getUser'], getUser, {
+    onError: e => showError(e, 'getUser'),
+  })
 
   return (
     <MainLayout userType="PATIENT">

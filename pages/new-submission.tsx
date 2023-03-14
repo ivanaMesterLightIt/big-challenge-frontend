@@ -9,6 +9,7 @@ import { BaseButton } from '../components/shared/BaseButton'
 import { BaseInput } from '../components/shared/BaseInput'
 import { BaseTextArea } from '../components/shared/BaseTextArea'
 import { postSubmission } from '../api/patient'
+import { showError } from '../utils/showError'
 
 const submissionSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -35,11 +36,7 @@ export default function NewSubmissionPage() {
       })
       reset()
     },
-    onError: (error: any) => {
-      toast.error(error.response.data.message, {
-        position: 'top-right',
-      })
-    },
+    onError: e => showError(e, 'postSubmission'),
   })
 
   return (

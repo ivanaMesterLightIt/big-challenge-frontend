@@ -4,6 +4,7 @@ import { getMySubmissions } from '../api/submission'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
 import { DoctorSubmission } from '../types/submissions'
+import { showError } from '../utils/showError'
 
 const columnHelper = createColumnHelper<DoctorSubmission>()
 
@@ -33,6 +34,9 @@ export default function TaskHistoryPage() {
   const { data: submissionsData } = useQuery(
     ['getMySubmissions'],
     getMySubmissions,
+    {
+      onError: e => showError(e, 'getMySubmission'),
+    },
   )
 
   const submissions =
