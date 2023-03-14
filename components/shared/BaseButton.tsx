@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, FC } from 'react'
 import { tw } from '../../utils/tw'
-import { Oval } from 'react-loader-spinner'
+import { Loader } from './Loader'
 
 interface BaseButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   buttonClass: 'primary' | 'secondary'
@@ -25,21 +25,14 @@ export const BaseButton: FC<BaseButtonProps> = ({
       )}
       {...props}>
       {text}
-      <Oval
-        height={20}
-        width={20}
-        color="#2563EB"
+      <Loader
+        size={20}
+        isVisible={isLoading}
         wrapperStyle={{
           marginLeft: '10px',
           position: 'absolute',
           right: '10px',
         }}
-        wrapperClass=""
-        visible={isLoading}
-        ariaLabel="oval-loading"
-        secondaryColor="#E0F2FE"
-        strokeWidth={2}
-        strokeWidthSecondary={2}
       />
     </button>
   )
