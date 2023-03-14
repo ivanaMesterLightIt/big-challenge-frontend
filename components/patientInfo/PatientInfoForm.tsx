@@ -1,14 +1,14 @@
 import { z } from 'Zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { postPatientInfo } from '../../api/patient'
 import { BaseButton } from '../shared/BaseButton'
 import { BaseInput } from '../shared/BaseInput'
 import { BaseTextArea } from '../shared/BaseTextArea'
 import { User } from '../../api/models/user'
-import { FC, PropsWithChildren } from 'react'
+import { FC } from 'react'
 
 const patientInfoSchema = z.object({
   phone: z.string().min(1, { message: 'Phone number is required' }),
@@ -23,9 +23,7 @@ export interface PatienInfoFormProps {
   userData: User
 }
 
-export const PatienInfoForm: FC<PropsWithChildren<PatienInfoFormProps>> = ({
-  userData,
-}) => {
+export const PatienInfoForm: FC<PatienInfoFormProps> = ({ userData }) => {
   const {
     formState: { errors },
     register,
@@ -40,7 +38,7 @@ export const PatienInfoForm: FC<PropsWithChildren<PatienInfoFormProps>> = ({
     },
   })
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: postPatientInfo,
     onSuccess: () => {
       toast.success('Information successfully updated', {
@@ -54,11 +52,8 @@ export const PatienInfoForm: FC<PropsWithChildren<PatienInfoFormProps>> = ({
     },
   })
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    mutate(data)
-  }
   return (
-    <form className="w-[513px] mt-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-[513px] mt-4" onSubmit={handleSubmit((data) => mutate(data))}>
       <div className="w-full flex flex-row items-center justify-between">
         <BaseInput
           label="Phone number"
@@ -95,7 +90,12 @@ export const PatienInfoForm: FC<PropsWithChildren<PatienInfoFormProps>> = ({
         />
       </div>
       <div className="mt-6 w-1/3 px-3">
-        <BaseButton buttonClass="primary" text="Update profile" type="submit" />
+        <BaseButton
+          buttonClass="primary"
+          text="Update profile"
+          type="submit"
+          disabled={isLoading}
+        />
       </div>
     </form>
   )

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { BaseButton } from '../components/shared/BaseButton'
 import { BaseInput } from '../components/shared/BaseInput'
 import { useRouter } from 'next/router'
@@ -15,12 +15,7 @@ const loginSchema = z.object({
     .string()
     .min(1, { message: 'Email is required' })
     .email({ message: 'Invalid email' }),
-  password: z
-    .string()
-    .min(1, { message: 'Password is required' })
-    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-      message: 'Invalid password',
-    }),
+  password: z.string().min(1, { message: 'Password is required' }),
 })
 
 export type FormValues = z.infer<typeof loginSchema>
@@ -53,10 +48,6 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    mutate(data)
-  }
-
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center">
       <div className="w-[320px]">
@@ -66,7 +57,7 @@ export default function LoginPage() {
           </h1>
           <span className="mt-3 text-sm">Log in to access unique features</span>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(data => mutate(data))}>
           <div className="w-full flex flex-row items-center justify-between">
             <BaseInput
               label="Email"
@@ -85,7 +76,13 @@ export default function LoginPage() {
             />
           </div>
           <div className="mt-6 w-full px-3">
-            <BaseButton buttonClass="primary" text="Log in" type="submit" isLoading={isLoading} />
+            <BaseButton
+              buttonClass="primary"
+              text="Log in"
+              type="submit"
+              isLoading={isLoading}
+              disabled={isLoading}
+            />
           </div>
         </form>
         <div className="mt-10 flex flex-row items-center justify-center text-sm">
