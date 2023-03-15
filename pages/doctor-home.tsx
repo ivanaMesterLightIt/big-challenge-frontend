@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { getSubmissions } from '../api/submission'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
+import { Loader } from '../components/shared/Loader'
 import { DoctorSubmission } from '../types/submissions'
 import { showError } from '../utils/showError'
 
@@ -31,7 +32,7 @@ const columns = [
 ]
 
 export default function DoctorHomePage() {
-  const { data: submissionsData } = useQuery(
+  const { data: submissionsData, isLoading } = useQuery(
     ['getSubmissions'],
     getSubmissions,
     {
@@ -50,7 +51,19 @@ export default function DoctorHomePage() {
 
   return (
     <MainLayout userType="DOCTOR">
-      {!!submissionsData && <BaseTable data={submissions} columns={columns} />}
+      {!!submissionsData ? (
+        <BaseTable data={submissions} columns={columns} />
+      ) : (
+        <Loader
+          size={20}
+          isVisible={isLoading}
+          wrapperStyle={{
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+          }}
+        />
+      )}
     </MainLayout>
   )
 }

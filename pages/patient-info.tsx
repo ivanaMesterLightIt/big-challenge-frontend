@@ -3,7 +3,7 @@ import { MainLayout } from '../components/layouts/mainLayout'
 import { BackButton } from '../components/shared/BackButton'
 import { getUser } from '../api/user'
 import { PatienInfoForm } from '../components/patientInfo/PatientInfoForm'
-import { Oval } from 'react-loader-spinner'
+import { Loader } from '../components/shared/Loader'
 import { showError } from '../utils/showError'
 
 export default function PatientInfoPage() {
@@ -25,21 +25,14 @@ export default function PatientInfoPage() {
       {userData ? (
         <PatienInfoForm userData={userData} />
       ) : (
-        <Oval
-          height={20}
-          width={20}
-          color="#2563EB"
+        <Loader
+          size={20}
+          isVisible={isLoading}
           wrapperStyle={{
             position: 'absolute',
             right: '50%',
             top: '50%',
           }}
-          wrapperClass=""
-          visible={isLoading}
-          ariaLabel="oval-loading"
-          secondaryColor="#E0F2FE"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
         />
       )}
     </MainLayout>

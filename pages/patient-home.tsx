@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { getMySubmissions } from '../api/submission'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
+import { Loader } from '../components/shared/Loader'
 import { Select } from '../components/shared/Select'
 import { PatientSubmission } from '../types/submissions'
 import { showError } from '../utils/showError'
@@ -42,7 +43,7 @@ const selectOptions = [
 export default function PatientHomePage() {
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  const { data: submissionsData } = useQuery(
+  const { data: submissionsData, isLoading } = useQuery(
     ['getMySubmissions'],
     getMySubmissions,
     {
@@ -71,7 +72,7 @@ export default function PatientHomePage() {
           />
         </div>
       </div>
-      {!!submissionsData && (
+      {!!submissionsData ? (
         <BaseTable
           data={
             selectedStatus === 'all'
@@ -81,6 +82,16 @@ export default function PatientHomePage() {
                 )
           }
           columns={columns}
+        />
+      ) : (
+        <Loader
+          size={20}
+          isVisible={isLoading}
+          wrapperStyle={{
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+          }}
         />
       )}
     </MainLayout>

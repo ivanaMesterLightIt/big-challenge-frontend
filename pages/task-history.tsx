@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { getMySubmissions } from '../api/submission'
 import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
+import { Loader } from '../components/shared/Loader'
 import { DoctorSubmission } from '../types/submissions'
 import { showError } from '../utils/showError'
 
@@ -31,7 +32,7 @@ const columns = [
 ]
 
 export default function TaskHistoryPage() {
-  const { data: submissionsData } = useQuery(
+  const { data: submissionsData, isLoading } = useQuery(
     ['getMySubmissions'],
     getMySubmissions,
     {
@@ -50,7 +51,19 @@ export default function TaskHistoryPage() {
 
   return (
     <MainLayout userType="DOCTOR">
-      {!!submissionsData && <BaseTable data={submissions} columns={columns} />}
+      {!!submissionsData ? (
+        <BaseTable data={submissions} columns={columns} />
+      ) : (
+        <Loader
+          size={20}
+          isVisible={isLoading}
+          wrapperStyle={{
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+          }}
+        />
+      )}
     </MainLayout>
   )
 }
