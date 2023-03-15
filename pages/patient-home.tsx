@@ -6,6 +6,7 @@ import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
 import { Select } from '../components/shared/Select'
 import { PatientSubmission } from '../types/submissions'
+import { showError } from '../utils/showError'
 
 const columnHelper = createColumnHelper<PatientSubmission>()
 
@@ -44,6 +45,9 @@ export default function PatientHomePage() {
   const { data: submissionsData } = useQuery(
     ['getMySubmissions'],
     getMySubmissions,
+    {
+      onError: e => showError(e, 'getMySubmissions'),
+    },
   )
 
   const submissions =
