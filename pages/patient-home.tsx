@@ -7,6 +7,7 @@ import { BaseTable } from '../components/shared/BaseTable'
 import { Loader } from '../components/shared/Loader'
 import { Select } from '../components/shared/Select'
 import { PatientSubmission } from '../types/submissions'
+import { showError } from '../utils/showError'
 
 const columnHelper = createColumnHelper<PatientSubmission>()
 
@@ -45,6 +46,9 @@ export default function PatientHomePage() {
   const { data: submissionsData, isLoading } = useQuery(
     ['getMySubmissions'],
     getMySubmissions,
+    {
+      onError: e => showError(e, 'getMySubmissions'),
+    },
   )
 
   const submissions =

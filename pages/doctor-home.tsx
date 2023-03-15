@@ -5,6 +5,7 @@ import { MainLayout } from '../components/layouts/mainLayout'
 import { BaseTable } from '../components/shared/BaseTable'
 import { Loader } from '../components/shared/Loader'
 import { DoctorSubmission } from '../types/submissions'
+import { showError } from '../utils/showError'
 
 const columnHelper = createColumnHelper<DoctorSubmission>()
 
@@ -34,6 +35,9 @@ export default function DoctorHomePage() {
   const { data: submissionsData, isLoading } = useQuery(
     ['getSubmissions'],
     getSubmissions,
+    {
+      onError: e => showError(e, 'getSubmissions'),
+    },
   )
 
   const submissions =

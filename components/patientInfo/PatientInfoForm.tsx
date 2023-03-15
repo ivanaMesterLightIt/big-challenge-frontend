@@ -9,6 +9,7 @@ import { BaseInput } from '../shared/BaseInput'
 import { BaseTextArea } from '../shared/BaseTextArea'
 import { User } from '../../api/models/user'
 import { FC } from 'react'
+import { showError } from '../../utils/showError'
 
 const patientInfoSchema = z.object({
   phone: z.string().min(1, { message: 'Phone number is required' }),
@@ -45,11 +46,7 @@ export const PatienInfoForm: FC<PatienInfoFormProps> = ({ userData }) => {
         position: 'top-right',
       })
     },
-    onError: (error: any) => {
-      toast.error(error.response.data.message, {
-        position: 'top-right',
-      })
-    },
+    onError: e => showError(e, 'postPatientInfo'),
   })
 
   return (
