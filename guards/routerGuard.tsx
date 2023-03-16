@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../api/user'
 import toast from 'react-hot-toast'
 
-const publicPaths = ['/login', '/sign-up', '/']
+const publicPaths = ['/login', '/sign-up', '/', '/email-verified']
 const doctorPaths = ['/doctor-home', '/task-history', '/submission']
 const patientPaths = [
   '/patient-home',
