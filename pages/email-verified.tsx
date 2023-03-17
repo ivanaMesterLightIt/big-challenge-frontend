@@ -16,7 +16,7 @@ export default function EmailVerifiedPage() {
         <span className="text-gray-500 mr-1">Click here to </span>
         <a
           onClick={() => {
-            router.push('/sign-up')
+            router.push('/login')
           }}
           className="text-blue-600 hover:underline cursor-pointer">
           login
