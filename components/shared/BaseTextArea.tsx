@@ -28,7 +28,7 @@ export const BaseTextArea = React.forwardRef<
       </div>
       <div className="h-4">
           {!!error && (
-            <span className="text-red-500 text-xs">{errorMessage}</span>
+            <p className="text-red-500 text-xs">{errorMessage}</p>
           )}
         </div>
     </div>
