@@ -40,11 +40,6 @@ export const useSubmission = (submissionId?: string) => {
 
   const uploadFileMutation = useMutation({
     mutationFn: uploadFileToSubmission,
-    onSuccess: () => {
-      toast.success('File uploaded', {
-        position: 'top-right',
-      })
-    },
     onError: e => showError(e, 'uploadFileToSubmission'),
   })
 
